@@ -24,6 +24,10 @@
               <router-link to="/activities" class="nav-link">Activities</router-link>
             </li>
 
+             <li v-if="$auth.isAuthenticated" class="nav-item">
+              <router-link to="/upload" class="nav-link">Upload</router-link>
+            </li>
+
           </ul>
           <ul class="navbar-nav d-none d-md-block">
             <li v-if="!$auth.isAuthenticated && !$auth.loading" class="nav-item">

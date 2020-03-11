@@ -7,6 +7,16 @@
   <name>Morning Activity</name>
   <type>2</type>
   <trkseg>
+
+            <extensions>
+                <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>ff3333</color>
+                <opacity>1</opacity>
+                <weight>1</weight>
+                <linecap>square</linecap>
+                </line>
+            </extensions>
+
    <trkpt lat="48.8619760" lon="-121.6539630">
     <ele>1101.7</ele>
     <time>2020-01-31T17:37:54Z</time>
@@ -207,6 +217,16 @@
     <ele>1134.2</ele>
     <time>2020-01-31T17:43:51Z</time>
    </trkpt>
+   </trkseg>
+   <trkseg>
+   <extensions>
+        <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+        <color>45ff33</color>
+        <opacity>0.5</opacity>
+        <weight>1</weight>
+        <linecap>square</linecap>
+        </line>
+    </extensions>
    <trkpt lat="48.8600770" lon="-121.6541160">
     <ele>1134.9</ele>
     <time>2020-01-31T17:43:53Z</time>
@@ -499,6 +519,19 @@
     <ele>1172.9</ele>
     <time>2020-01-31T17:46:18Z</time>
    </trkpt>
+   </trkseg>
+   <trkseg>
+
+    <extensions>
+        <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+        <color>000000</color>
+        <opacity>0.5</opacity>
+        <weight>1</weight>
+        <linecap>square</linecap>
+        </line>
+    </extensions>
+
+
    <trkpt lat="48.8573800" lon="-121.6536230">
     <ele>1173.6</ele>
     <time>2020-01-31T17:46:20Z</time>
@@ -1807,6 +1840,19 @@
     <ele>1183.6</ele>
     <time>2020-01-31T17:59:15Z</time>
    </trkpt>
+ </trkseg>
+
+
+   <trkseg>
+
+            <extensions>
+                <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f933ff</color>
+                <opacity>1</opacity>
+                <weight>1</weight>
+                <linecap>square</linecap>
+                </line>
+            </extensions>
    <trkpt lat="48.8577020" lon="-121.6536970">
     <ele>1184.2</ele>
     <time>2020-01-31T17:59:17Z</time>
