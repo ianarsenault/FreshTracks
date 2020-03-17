@@ -2,7 +2,9 @@
   <div class="container">
       <div class="row align-items-center profile-header">
       <div class="col-md-12">
+        hello
           <Upload />
+          <dropzone></dropzone>
          
       </div>
     </div>
@@ -13,12 +15,14 @@
 
 <script>
 import Upload from "../components/Upload";
+import Dropzone from '../components/Dropzone'
 
 
 export default {
   name: "New",
   components: {
     Upload,
+    Dropzone
   }
 };
 </script>

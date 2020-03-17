@@ -9,7 +9,6 @@ import { faLink, faUser, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { domain, clientId } from "../auth_config.json";
 
-
 require('./assets/css/style.css')
 
 Vue.config.productionTip = false;

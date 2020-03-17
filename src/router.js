@@ -4,6 +4,7 @@ import Home from "./views/Home.vue";
 import Profile from "./views/Profile.vue";
 import Activities from "./views/Activities.vue";
 import New from "./views/New.vue";
+
 import { authGuard } from "./auth";
 
 Vue.use(Router);
@@ -26,7 +27,7 @@ const router = new Router({
       path: "/upload",
       name: "New",
       component: New
-    },
+    }
   ]
 });
 

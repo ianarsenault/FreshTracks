@@ -6,6 +6,12 @@
         <div id="mapHolder">
          <Map />
 
+         <div class="row align-items-center profile-header">
+              <div class="col-md-12">
+                <List /> 
+                <Dropzone />
+              </div>
+         </div>
         </div>
       </div>
     </div>
@@ -15,12 +21,16 @@
 </template>
 <script>
 import Map from "../components/Map";
-
+import Upload from "../components/Upload";
+import List from "../components/List";
+import Dropzone from '../components/Dropzone'
 
 export default {
   name: "Activities",
   components: {
     Map,
+    Dropzone,
+    List,
   }
 };
 </script>
