@@ -1,85 +1,65 @@
 <template>
   <div id="contact" class="hello">
-      <h1>{{ msg }}</h1>
-            <label>File
-              <input type="file" id="file" ref="file" v-on:change="selectedFile()"/>
-            </label>
-      <div v-if="response" id="response">
-        <h2>Thank you, here's the response</h2>
-        <pre >{{ response }}</pre>
-      </div>
-      <div v-else>
-        <form @submit.prevent="submitForm">
-          <div class="large-12 medium-12 small-12 cell">
-          </div>
-          <button :class="[name ? activeClass : '']" type="submit">Submit</button>
-        </form>
-      </div>
-
+      <h3>Activities</h3>
+            <table id="activities">
+              <thead>
+                <tr>
+                  <td>Date</td><td>Creator</td><td>ID</td>
+                </tr>
+               </thead> 
+                <tr v-for="item in activities" :key="item.ID">
+                  <td>
+                    {{ JSON.parse(item.metadata.S).gpxMeta.time }}
+                  </td>
+                  <td>
+                    <a v-bind:href="'/activities?ID='+ item.ID.S ">{{ JSON.parse(item.metadata.S).gpxMeta.creator }} </a>
+                  </td>
+                  <td>
+                    {{ item.ID.S}}  
+                  </td>
+                </tr>
+            </table>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
 export default {
-  name: 'Upload',
+  name: 'List',
   props: {
     msg: String
   },
   data() {
-    console.log(process.env.VUE_APP_POST_URL)
     return {
-      userID: 1,
-      name: '',
-      email: '',
+      activities:'',
       message: '',
       response: '',
       success: '',
-      GPXData:'',
-      activeClass: 'active'
+ 
     }
   },
   methods: {
-    submitForm() {
-
-      const formData = new FormData();
-      
-      formData.append("email", this.email);
-      formData.append("ADDRESS","BEN");
-      
-    
-      //console.log(this.GPXData)
+    getActivities() {
       axios({
-        method: "POST",
-        url: process.env.VUE_APP_APIGW_URL,
-        data: {"email": this.$auth.user.email,"xmlData":this.GPXData},
+        method: "Get",
+        url: process.env.VUE_APP_APIGW_URL+'/activities',
+        params:{"email": this.$auth.user.email},
       }).then(response => {
-        console.log(response);
-        // this.response = response.data
-        this.success = 'Data saved successfully';
-        this.response = JSON.stringify(response, null, 2)
+       
+        this.success = 'Data retrieved successfully';
+        //this.response = JSON.stringify(response, null, 2)
+        this.activities= response.data.Items
+
       }).catch(error => {
         console.log(error)
         this.response = 'Error: ' + error.response.status
       })
-      this.name = '';
-      this.email = '';
-      this.message = '';
+
     },
-    selectedFile() {
-
-      let file = this.$refs.file.files[0];
-     // if(!file || file.type !== 'text/plain') return;
-      let reader = new FileReader();
-      reader.readAsText(file, "UTF-8");
-
-      reader.onload =  evt => {
-       this.GPXData=evt.target.result
-      }
-      reader.onerror = evt => {
-        console.error(evt);
-      }
-    }
+  },
+  mounted(){
+     let act =  this.getActivities()
+ 
   }
 }
 </script>
@@ -161,3 +141,22 @@ overflow: scroll;
 max-width: 400px;
 border:solid;
   }
+
+  table{
+  border: solid 3px #eee !important;
+  width:100%;
+  margin-bottom:10px
+}
+
+table thead tr td{
+  background-color: #eee;
+  font-weight:100;
+  font-style: italic;
+}
+
+table tr td{
+  padding:10px; 
+}
+h3{font-style: italic; font-weight: 100;;}
+
+</style>
