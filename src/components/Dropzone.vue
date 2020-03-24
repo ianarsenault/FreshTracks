@@ -14,6 +14,11 @@ import '../../node_modules/dropzone/dist/dropzone.css'
 import axios from 'axios'
 Dropzone.autoDiscover = false
 export default {
+
+  data(){
+    return{componentKey: 0}
+  },
+
   name: 'dropzone',
   mounted () {
     const vm = this
@@ -69,12 +74,16 @@ export default {
     // Set signed upload URL for each file
     vm.dropzone.on('processing', (file) => {
       vm.dropzone.options.url = file.uploadURL
+    }),
+     vm.dropzone.on("success", (file) => {
+      vm.componentKey+=1
+      this.$root.$emit('eventing', vm.componentKey);
     })
   },
   methods:{
         getSignedURL (file){
             let endpoint = process.env.VUE_APP_APIGW_URL+'/signUrl'
-            let payload = {'filePath': file.name,'contentType':file.contentType,'user_id':this.$auth.user.name}
+            let payload = {'filePath': file.name,'contentType':file.contentType,'user_id':this.$auth.user.sub}
             return axios.post(endpoint, payload)
             .then((res) => {
               console.log('here')

@@ -21,12 +21,8 @@ const router = new Router({
     {
       path: "/activities",
       name: "activities",
-      component: Activities
-    },
-    {
-      path: "/upload",
-      name: "New",
-      component: New
+      component: Activities,
+      beforeEnter: authGuard
     }
   ]
 });

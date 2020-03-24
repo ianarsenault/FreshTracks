@@ -1,14 +1,12 @@
 <template>
 <div class="container">
     <div class="row align-items-top">
- 
         <div style="col-md-12 height:500px; min-width: 100%; "  >
           <h3>
             {{name}}
           </h3>
-          <l-map style="height:500px; " ref="myMap"
-            v-if="showMap"
-            :zoom="15"
+          <l-map style="height:500px;" ref="myMap"
+            :zoom="14"
             :center="center"
             :options="mapOptions"
             @update:center="centerUpdate"
@@ -22,7 +20,7 @@
           </l-map>
         </div>
       </div>
-        <div id="meta">
+        <div v-if="name" id="meta">
             <table style="width:100%; border:0px">
               <tr>
                 <td style="">
@@ -56,9 +54,9 @@
             <hr v-if="heartrate > 0" />
             <p v-if="temp > 0"> <img class="mb-1 icon xs" src="/icons/map/030-route.png" alt="Fresh tracks"/>  Avg Temp: {{temp}} </p>
             <hr v-if="temp > 0" />
-          
-          </div>
-    </div>
+        </div>
+      </div>
+  
 </template>
 
 <script>
@@ -81,7 +79,7 @@ export default {
     return {
       //initializeGPXData//
       gpxfile:"",
-
+      toggle:false,
       elevation: 0, 
       heartrate: 0,
       temp: 0,
@@ -99,12 +97,12 @@ export default {
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      currentZoom: 11.5,
+      currentZoom: 4.5,
       showParagraph: false,
       mapOptions: {
         zoomSnap: 0.5
       },
-      showMap: true
+      showMap: false
     };
   },
   methods: {
@@ -119,21 +117,23 @@ export default {
     },
     innerClick() {
       alert("Click!");
+    },
+    revealMap(){
+      this.showMap=true
     }
+
   },
   mounted(){
-
-    let mapObject = this.$refs.myMap.mapObject
-    var self = this
-
    
-        
+    var self = this
+    let mapObject = this.$refs.myMap.mapObject
+
       axios({
         method: "Get",
         url: process.env.VUE_APP_APIGW_URL+'/activity',
         params:{"ID": this.$route.query.ID},
-      }).then(response => {
-        
+      }).then(response => {   
+
           this.success = 'Data retrieved successfully';
         //this.response = JSON.stringify(response, null, 2)
           self.gpxfile = response.data
@@ -173,11 +173,13 @@ export default {
               self.startTime= gpx.get_start_time();
               self.endTime= gpx.get_end_time();
               self.distance = gpx.get_distance().toFixed(2)
+                gpx.showMap= true
         }).addTo(mapObject)
 
     var layer = new L.TileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png');
     mapObject.addLayer(layer);
-
+ 
+    
               //mapObject.setView(L.latLng(48.8619760,-121.6539630),15)
     }).catch(error => {
        
