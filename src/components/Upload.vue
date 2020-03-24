@@ -52,7 +52,7 @@ export default {
       axios({
         method: "POST",
         url: process.env.VUE_APP_APIGW_URL,
-        data: {"email": this.$auth.user.email,"xmlData":this.GPXData},
+        data: {"email": this.$auth.user.sub,"xmlData":this.GPXData},
       }).then(response => {
         console.log(response);
         // this.response = response.data

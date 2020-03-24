@@ -4,12 +4,16 @@
       <div class="col-md-12">
         
         <div id="mapHolder">
-         <Map />
+         <Map v-if="this.$route.query.ID" />
 
          <div class="row align-items-center profile-header">
               <div class="col-md-12">
-                <List /> 
-                <Dropzone />
+                <pre>
+                  {{this.$auth.user.sub}}
+                  </pre>
+
+                <List v-if="this.$auth.user.sub" :email=this.$auth.user.sub :key="componentKey" /> 
+                <Dropzone :key="componentKey" />
               </div>
          </div>
         </div>
@@ -25,12 +29,16 @@ import Upload from "../components/Upload";
 import List from "../components/List";
 import Dropzone from '../components/Dropzone'
 
+
 export default {
   name: "Activities",
   components: {
     Map,
     Dropzone,
     List,
+  },
+  methods:{
+    
   }
 };
 </script>

@@ -1,24 +1,36 @@
 <template>
   <div id="contact" class="hello">
+    <div v-if="activities.length >0">
       <h3>Activities</h3>
+
             <table id="activities">
               <thead>
                 <tr>
-                  <td>Date</td><td>Creator</td><td>ID</td>
+                  <td>Name</td><td>Distance</td>
                 </tr>
                </thead> 
                 <tr v-for="item in activities" :key="item.ID">
-                  <td>
+                 <!--  <td>
                     {{ JSON.parse(item.metadata.S).gpxMeta.time }}
+                  </td> -->
+                  <td>
+                    <a v-bind:href="'/activities?ID='+ item.ID.S ">{{ JSON.parse(item.metadata.S).gpxMeta.name }} </a>
                   </td>
                   <td>
-                    <a v-bind:href="'/activities?ID='+ item.ID.S ">{{ JSON.parse(item.metadata.S).gpxMeta.creator }} </a>
+                    <a v-bind:href="'/activities?ID='+ item.ID.S ">{{ parseInt(JSON.parse(item.metadata.S).gpxMeta['length']) }} km </a>
                   </td>
-                  <td>
-                    {{ item.ID.S}}  
-                  </td>
+   
                 </tr>
             </table>
+      </div>
+      <div v-else>
+        <h3> 
+          You haven't uploaded any activities yet. Drag a GPX file into the drop zone below to get started.
+          <img style="float: right; max-width: 130px;" src="/images/downArrow.png">
+        
+         </h3>
+        <br/>
+      </div>
     </div>
 </template>
 
@@ -27,25 +39,28 @@ import axios from 'axios';
 export default {
   name: 'List',
   props: {
-    msg: String
+    msg: String,
+    email:String
   },
   data() {
     return {
+      componentKey:0,
       activities:'',
       message: '',
       response: '',
       success: '',
+      email:'',
  
     }
   },
   methods: {
     getActivities() {
+
       axios({
-        method: "Get",
-        url: process.env.VUE_APP_APIGW_URL+'/activities',
-        params:{"email": this.$auth.user.email},
-      }).then(response => {
-       
+        method: "Get",   
+        url: process.env.VUE_APP_APIGW_URL+'/activities?email='+this.email,
+        //params:{"email": this.$auth.user.email},
+      }).then(response => { 
         this.success = 'Data retrieved successfully';
         //this.response = JSON.stringify(response, null, 2)
         this.activities= response.data.Items
@@ -56,9 +71,23 @@ export default {
       })
 
     },
+     wait(ms){
+      var start = new Date().getTime();
+      var end = start;
+      while(end < start + ms) {
+        end = new Date().getTime();
+      }
+    },
   },
   mounted(){
+
+    
      let act =  this.getActivities()
+      
+      this.$root.$on('eventing', data => {
+        this.wait(5000)
+        let act =  this.getActivities()
+      });
  
   }
 }
