@@ -31,7 +31,7 @@ export default {
     return {
       userID: 1,
       name: '',
-      email: '',
+      user_id: '',
       message: '',
       response: '',
       success: '',
@@ -44,7 +44,7 @@ export default {
 
       const formData = new FormData();
       
-      formData.append("email", this.email);
+      formData.append("user_id", this.user_id);
       formData.append("ADDRESS","BEN");
       
     
@@ -52,7 +52,7 @@ export default {
       axios({
         method: "POST",
         url: process.env.VUE_APP_APIGW_URL,
-        data: {"email": this.$auth.user.sub,"xmlData":this.GPXData},
+        data: {"user_id": this.$auth.user.sub,"xmlData":this.GPXData},
       }).then(response => {
         console.log(response);
         // this.response = response.data
@@ -63,7 +63,7 @@ export default {
         this.response = 'Error: ' + error.response.status
       })
       this.name = '';
-      this.email = '';
+      this.user_id = '';
       this.message = '';
     },
     selectedFile() {

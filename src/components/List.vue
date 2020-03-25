@@ -40,7 +40,7 @@ export default {
   name: 'List',
   props: {
     msg: String,
-    email:String
+    user_id:String
   },
   data() {
     return {
@@ -49,7 +49,7 @@ export default {
       message: '',
       response: '',
       success: '',
-      email:'',
+      user_id:'',
  
     }
   },
@@ -57,9 +57,9 @@ export default {
     getActivities() {
 
       axios({
-        method: "Get",   
-        url: process.env.VUE_APP_APIGW_URL+'/activities?email='+this.email,
-        //params:{"email": this.$auth.user.email},
+        method: "GET",   
+        url: process.env.VUE_APP_APIGW_URL+'/activities',
+        params:{"user_id": this.user_id},
       }).then(response => { 
         this.success = 'Data retrieved successfully';
         //this.response = JSON.stringify(response, null, 2)
