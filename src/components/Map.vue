@@ -197,4 +197,5 @@ export default {
 .icon.sm{max-width: 80px; display: inline;}
 h3{font-style: italic; font-weight: 100;;}
 .stat{font-weight: 900;}
+h3{font-size:1rem;}
 </style>
