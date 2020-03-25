@@ -8,11 +8,7 @@
 
          <div class="row align-items-center profile-header">
               <div class="col-md-12">
-                <pre>
-                  {{this.$auth.user.sub}}
-                  </pre>
-
-                <List v-if="this.$auth.user.sub" :email=this.$auth.user.sub :key="componentKey" /> 
+                <List v-if="this.$auth.user.sub" :user_id=this.$auth.user.sub :key="componentKey" /> 
                 <Dropzone :key="componentKey" />
               </div>
          </div>
