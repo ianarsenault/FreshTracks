@@ -31,7 +31,7 @@
                 </td>
                 <td style="">
                       <h3 v-if="elevation > 0">Total Elevation</h3>
-                      <p class="stat">Elevation: {{elevation}} M</p>
+                      <p class="stat">{{elevation}} M</p>
                 </td>
               </tr>
               <tr>
@@ -41,11 +41,11 @@
                 </td>
                 <td style="">
                       <h3 v-if="averageSpeed > 0">Average Speed</h3>
-                      <p class="stat">{{averageSpeed}} M</p>
+                      <p class="stat">{{averageSpeed}} KM/H</p>
                 </td>
                 <td style="">
                       <h3 >Moving Time</h3>
-                      <p class="stat">{{totalTime}} M</p>
+                      <p class="stat">{{totalTime}}</p>
                 </td>
               </tr>
             </table>

@@ -10,8 +10,8 @@
     <footer class="bg-light text-center p-3">
       <div class="logo"></div>
       <p>
-        Sample project provided by
-        <a href="https://auth0.com">Auth0</a>
+        Source code available on Github
+        <a href="https://github.com/bls20AWS/freshTracks"></a>
       </p>
     </footer>
   </div>
