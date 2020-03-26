@@ -7,7 +7,7 @@
           </h3>
           <l-map style="height:500px;" ref="myMap"
             :zoom="14"
-            :center="center"
+            
             :options="mapOptions"
             @update:center="centerUpdate"
             @update:zoom="zoomUpdate"
@@ -62,6 +62,7 @@
 <script>
 import { latLng } from "leaflet";
 import 'leaflet-gpx';
+
 import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
 import axios from 'axios';
 require 
@@ -127,7 +128,7 @@ export default {
    
     var self = this
     let mapObject = this.$refs.myMap.mapObject
-
+  
       axios({
         method: "Get",
         url: process.env.VUE_APP_APIGW_URL+'/activity',
@@ -138,7 +139,7 @@ export default {
         //this.response = JSON.stringify(response, null, 2)
           self.gpxfile = response.data
 
-          const track = new L.GPX(self.gpxfile, 
+        const track = new L.GPX(self.gpxfile, 
           { async: true,
             gpx_options:{
               parseElements: ['track', 'route', 'waypoint'],
@@ -159,8 +160,8 @@ export default {
               endIconUrl: 'icons/map/024-flag.png',
               shadowUrl: ''
             }
-          },
-          ).on('loaded', function (e) {
+          })
+          track.on('loaded', function (e) {
           var gpx = e.target;
               mapObject.fitBounds(gpx.getBounds());
               self.name= gpx.get_name()
@@ -174,11 +175,14 @@ export default {
               self.endTime= gpx.get_end_time();
               self.distance = gpx.get_distance().toFixed(2)
                 gpx.showMap= true
-        }).addTo(mapObject)
+        })
+        track.addTo(mapObject)
+       
+        var layer = new L.TileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png');
+        mapObject.addLayer(layer);
 
-    var layer = new L.TileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png');
-    mapObject.addLayer(layer);
- 
+
+   // track.addTo(mapObject)
     
               //mapObject.setView(L.latLng(48.8619760,-121.6539630),15)
     }).catch(error => {

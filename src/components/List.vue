@@ -9,7 +9,7 @@
                   <td>Name</td><td>Distance</td>
                 </tr>
                </thead> 
-                <tr v-for="item in activities" :key="item.ID">
+                <tr v-for="item in activities">
                  <!--  <td>
                     {{ JSON.parse(item.metadata.S).gpxMeta.time }}
                   </td> -->
@@ -49,8 +49,6 @@ export default {
       message: '',
       response: '',
       success: '',
-      user_id:'',
- 
     }
   },
   methods: {
