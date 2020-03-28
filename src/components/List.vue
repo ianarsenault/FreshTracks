@@ -2,13 +2,14 @@
   <div id="contact" class="hello">
     <div v-if="activities.length >0">
       <h3>Activities</h3>
-
+      <p>Select one of your activites below to view on the map</p>
             <table id="activities">
               <thead>
                 <tr>
                   <td>Name</td><td>Distance</td>
                 </tr>
                </thead> 
+               {{ message }}
                 <tr v-for="item in activities">
                  <!--  <td>
                     {{ JSON.parse(item.metadata.S).gpxMeta.time }}
@@ -31,28 +32,41 @@
          </h3>
         <br/>
       </div>
+
+       <h1></h1>
+    <IoT/>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import IoT from './Iot'
+
 export default {
   name: 'List',
-  props: {
-    msg: String,
-    user_id:String
-  },
-  data() {
+
+  data:()=>{
     return {
       componentKey:0,
       activities:'',
       message: '',
       response: '',
       success: '',
+      total:0,
     }
   },
+  components: {
+    IoT
+  },
+  props: {
+    msg: String,
+    user_id:String
+  },
+
   methods: {
     getActivities() {
+
+console.log('getting act')
 
       axios({
         method: "GET",   
@@ -63,30 +77,32 @@ export default {
         //this.response = JSON.stringify(response, null, 2)
         this.activities= response.data.Items
 
+        let total =   this.total
+        this.activities.forEach(function(item) {
+             //total += JSON.parse(item.metadata.S).gpxMeta['length']
+            total += JSON.parse(item.metadata.S).gpxMeta['length']
+            
+        });
+         this.$emit('DistanceTotal',total)
+    
+
       }).catch(error => {
         console.log(error)
         this.response = 'Error: ' + error.response.status
       })
 
     },
-     wait(ms){
-      var start = new Date().getTime();
-      var end = start;
-      while(end < start + ms) {
-        end = new Date().getTime();
-      }
-    },
   },
   mounted(){
-
-    
-     let act =  this.getActivities()
-      
-      this.$root.$on('eventing', data => {
-        this.wait(5000)
-        let act =  this.getActivities()
-      });
+     this.getActivities()
  
+  },
+  created () {
+    this.$root.$on('send', (text) => {
+      //this.message = text.message
+      //this.activities+=text.message
+      this.getActivities()
+    })
   }
 }
 </script>
