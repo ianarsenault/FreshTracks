@@ -26,16 +26,22 @@ import List from "../components/List";
 import Dropzone from '../components/Dropzone'
 
 
+
+
+
 export default {
   name: "Activities",
+
   components: {
     Map,
     Dropzone,
     List,
+
   },
   methods:{
     
   }
+
 };
 </script>
 

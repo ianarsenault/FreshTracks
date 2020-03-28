@@ -12,6 +12,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
     "@fortawesome/free-solid-svg-icons": "^5.10.2",
     "@fortawesome/vue-fontawesome": "^0.1.7",
+    "aws-iot-device-sdk": "^2.2.3",
+    "aws-sdk": "^2.646.0",
     "axios": "^0.19.2",
     "core-js": "^2.6.9",
     "dropzone": "^5.7.0",
