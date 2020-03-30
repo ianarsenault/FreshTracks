@@ -3,7 +3,10 @@
     <div v-if="activities.length >0">
       <h3>Activities</h3>
       <p>Select one of your activites below to view on the map</p>
-            <table id="activities">
+     
+          <SkeletonTable v-if="showSkeleton"/>
+       
+            <table v-if="!showSkeleton" id="activities">
               <thead>
                 <tr>
                   <td>Name</td><td>Distance</td>
@@ -41,6 +44,7 @@
 <script>
 import axios from 'axios';
 import IoT from './Iot'
+import SkeletonTable from './SkeletonTable'
 
 export default {
   name: 'List',
@@ -53,10 +57,12 @@ export default {
       response: '',
       success: '',
       total:0,
+      showSkeleton:1,
     }
   },
   components: {
-    IoT
+    IoT,
+    SkeletonTable,
   },
   props: {
     msg: String,
@@ -64,10 +70,12 @@ export default {
   },
 
   methods: {
+
+    loading() {
+        this.showSkeleton=1;
+    },
+
     getActivities() {
-
-console.log('getting act')
-
       axios({
         method: "GET",   
         url: process.env.VUE_APP_APIGW_URL+'/activities',
@@ -78,14 +86,13 @@ console.log('getting act')
         this.activities= response.data.Items
 
         let total =   this.total
+        this.showSkeleton=0;
         this.activities.forEach(function(item) {
              //total += JSON.parse(item.metadata.S).gpxMeta['length']
             total += JSON.parse(item.metadata.S).gpxMeta['length']
             
         });
          this.$emit('DistanceTotal',total)
-    
-
       }).catch(error => {
         console.log(error)
         this.response = 'Error: ' + error.response.status
@@ -95,13 +102,17 @@ console.log('getting act')
   },
   mounted(){
      this.getActivities()
- 
   },
   created () {
     this.$root.$on('send', (text) => {
       //this.message = text.message
       //this.activities+=text.message
       this.getActivities()
+    }),
+    this.$root.$on('loading', (text) => {
+      //this.message = text.message
+      //this.activities+=text.message
+      this.loading()
     })
   }
 }
