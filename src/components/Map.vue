@@ -121,74 +121,78 @@ export default {
     },
     revealMap(){
       this.showMap=true
+    },
+    async drawMap(){
+        var self = this
+        const token =  await self.$auth.getTokenSilently()
+        let mapObject = this.$refs.myMap.mapObject
+      
+          axios({
+            method: "GET",
+            headers:{ Authorization: `Bearer ${token}` } ,  
+            url: process.env.VUE_APP_APIGW_URL+'/activity',
+            params:{"ID": this.$route.query.ID},
+
+          }).then(response => {
+
+              this.success = 'Data retrieved successfully';
+            //this.response = JSON.stringify(response, null, 2)
+              self.gpxfile = response.data
+
+            const track = new L.GPX(self.gpxfile, 
+              { async: true,
+                gpx_options:{
+                  parseElements: ['track', 'route', 'waypoint'],
+                  joinTrackSegments: false,
+                },
+                  polyline_options: {
+                  opacity: 0.55,
+                  weight: 4,
+                  lineCap: 'round'
+                },
+                marker_options: {
+                  wptIconUrls: {
+                      '': 'icons/map/005-pin-1.png',
+                      'Geocache Found': 'img/gpx/geocache.png',
+                      'Park': 'img/gpx/tree.png'
+                    },
+                  startIconUrl: 'icons/map/005-pin-1.png',
+                  endIconUrl: 'icons/map/024-flag.png',
+                  shadowUrl: ''
+                }
+              })
+              track.on('loaded', function (e) {
+              var gpx = e.target;
+                  mapObject.fitBounds(gpx.getBounds());
+                  self.name= gpx.get_name()
+                  self.elevation = gpx.get_elevation_max().toFixed(0)
+                  self.heartrate= gpx.get_average_hr().toFixed(2)
+                  self.temp= gpx.get_average_temp().toFixed(2)
+                  self.elevationLoss= gpx.get_elevation_loss().toFixed(0)
+                  self.averageSpeed= gpx.get_moving_speed().toFixed(2)
+                  self.totalTime= gpx.get_duration_string_iso(gpx.get_total_time())
+                  self.startTime= gpx.get_start_time();
+                  self.endTime= gpx.get_end_time();
+                  self.distance = gpx.get_distance().toFixed(2)
+                    gpx.showMap= true
+            })
+            track.addTo(mapObject)
+          
+            var layer = new L.TileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png');
+            mapObject.addLayer(layer);
+
+        }).catch(error => {
+          
+            this.response = 'Error: ' + error.response.status
+          })
+            
     }
 
   },
   mounted(){
-   
-    var self = this
-    let mapObject = this.$refs.myMap.mapObject
-  
-      axios({
-        method: "Get",
-        url: process.env.VUE_APP_APIGW_URL+'/activity',
-        params:{"ID": this.$route.query.ID},
-      }).then(response => {   
-
-          this.success = 'Data retrieved successfully';
-        //this.response = JSON.stringify(response, null, 2)
-          self.gpxfile = response.data
-
-        const track = new L.GPX(self.gpxfile, 
-          { async: true,
-            gpx_options:{
-              parseElements: ['track', 'route', 'waypoint'],
-              joinTrackSegments: false,
-            },
-              polyline_options: {
-              opacity: 0.55,
-              weight: 4,
-              lineCap: 'round'
-            },
-            marker_options: {
-              wptIconUrls: {
-                  '': 'icons/map/005-pin-1.png',
-                  'Geocache Found': 'img/gpx/geocache.png',
-                  'Park': 'img/gpx/tree.png'
-                },
-              startIconUrl: 'icons/map/005-pin-1.png',
-              endIconUrl: 'icons/map/024-flag.png',
-              shadowUrl: ''
-            }
-          })
-          track.on('loaded', function (e) {
-          var gpx = e.target;
-              mapObject.fitBounds(gpx.getBounds());
-              self.name= gpx.get_name()
-              self.elevation = gpx.get_elevation_max().toFixed(0)
-              self.heartrate= gpx.get_average_hr().toFixed(2)
-              self.temp= gpx.get_average_temp().toFixed(2)
-              self.elevationLoss= gpx.get_elevation_loss().toFixed(0)
-              self.averageSpeed= gpx.get_moving_speed().toFixed(2)
-              self.totalTime= gpx.get_duration_string_iso(gpx.get_total_time())
-              self.startTime= gpx.get_start_time();
-              self.endTime= gpx.get_end_time();
-              self.distance = gpx.get_distance().toFixed(2)
-                gpx.showMap= true
-        })
-        track.addTo(mapObject)
-       
-        var layer = new L.TileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png');
-        mapObject.addLayer(layer);
-
-
-   // track.addTo(mapObject)
     
-              //mapObject.setView(L.latLng(48.8619760,-121.6539630),15)
-    }).catch(error => {
-       
-        this.response = 'Error: ' + error.response.status
-      })
+    this.drawMap()
+    
   }
   
 };

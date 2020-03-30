@@ -75,9 +75,12 @@ export default {
         this.showSkeleton=1;
     },
 
-    getActivities() {
+    async getActivities() {
+      const token = await this.$auth.getTokenSilently()
+      console.log( 'Token:'+token)
       axios({
-        method: "GET",   
+        method: "GET",
+        headers:{ Authorization: `Bearer ${token}` } ,  
         url: process.env.VUE_APP_APIGW_URL+'/activities',
         params:{"user_id": this.user_id},
       }).then(response => { 
