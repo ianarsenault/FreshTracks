@@ -77,6 +77,7 @@ export default {
     }),
      vm.dropzone.on("success", (file) => {
       vm.componentKey+=1
+      this.$root.$emit('loading', 'loading');
       this.$root.$emit('eventing', vm.componentKey);
     })
   },
