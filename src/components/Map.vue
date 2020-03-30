@@ -26,26 +26,26 @@
                 <td style="">
                   
                       <h3 v-if="distance > 0">Total Distance</h3>
-                      <p class="stat">{{Math.round(distance/1000).toFixed(2)}} KM</p>
+                      <p v-if="distance >0" class="stat">{{Math.round(distance/1000).toFixed(2)}} KM</p>
 
                 </td>
                 <td style="">
                       <h3 v-if="elevation > 0">Total Elevation</h3>
-                      <p class="stat">{{elevation}} M</p>
+                      <p v-if="elevation > 0" class="stat">{{elevation}} M</p>
                 </td>
               </tr>
               <tr>
                 <td style="">
                       <h3 v-if="elevationLoss > 0">Verticle Skied</h3>
-                      <p class="stat">{{elevationLoss}} M</p>
+                      <p v-if="elevationLoss > 0" class="stat">{{elevationLoss}} M</p>
                 </td>
                 <td style="">
                       <h3 v-if="averageSpeed > 0">Average Speed</h3>
-                      <p class="stat">{{averageSpeed}} KM/H</p>
+                      <p v-if="averageSpeed > 0" class="stat">{{averageSpeed}} KM/H</p>
                 </td>
                 <td style="">
-                      <h3 >Moving Time</h3>
-                      <p class="stat">{{totalTime}}</p>
+                      <h3 v-if="totalTime > 0">Moving Time</h3>
+                      <p v-if="totalTime > 0" class="stat">{{totalTime}}</p>
                 </td>
               </tr>
             </table>
