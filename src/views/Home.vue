@@ -2,7 +2,7 @@
   <div>
     <hero />
     <hr />
-    <home-content />
+    <!-- <home-content /> -->
   </div>
 </template>
 
