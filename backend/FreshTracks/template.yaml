@@ -1,0 +1,459 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Serverless Backend for FreshTracks
+
+##########################################################################
+#  SAR metadata                                                          #
+##########################################################################
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: FreshTracks
+    Description: Serverless Backend for FreshTracks
+    Author: Benjamin Smith
+    SpdxLicenseId: MIT
+    LicenseUrl: LICENSE.txt
+    ReadmeUrl: README.md
+    Labels: ['Lambda', 'Step-Functions','API-Gateway', 'DynamoDB', 'forms']
+    HomePageUrl: https://github.com/bls20AWS/FreshTracks
+    SemanticVersion: 0.0.1
+    SourceCodeUrl: https://github.com/bls20AWS/FreshTracks
+
+
+##########################################################################
+#  Parameters & Globals                                                  #
+##########################################################################
+Parameters:
+  ValidateEmail:
+    Type: String
+    Description: (Required) A validated SES email address for receiving new submissions.
+    MaxLength: 70
+    Default: test@email.com
+    MinLength: 4
+    ConstraintDescription: Required. Must be a SES verified email address.
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 10
+  Api:
+    # enable CORS; to make more specific, change the origin wildcard
+    # to a particular domain name, e.g. "'www.example.com'"
+    EndpointConfiguration: EDGE
+    Cors: 
+      AllowMethods: "'OPTIONS,POST'"
+      AllowHeaders: "'Content-Type'"
+      AllowOrigin: "'*'"    
+Resources:
+##########################################################################
+#  API                                                        #
+##########################################################################  
+  FreshTracksAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        DefaultAuthorizer: MyLambdaTokenAuthorizer
+        Authorizers:
+          MyLambdaTokenAuthorizer:
+            FunctionArn: !GetAtt MyAuthFunction.Arn
+##########################################################################
+#  S3 Bucket                                                      #
+##########################################################################
+  FreshTracksS3Bucket:
+    Type: AWS::S3::Bucket
+  FreshtracksUserActivitylogs:
+    Type: AWS::S3::Bucket
+##########################################################################
+#  Dynamo DB Table                                                      #
+##########################################################################
+  FreshTracksDatabaseTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: user_id
+        AttributeType: S
+      - AttributeName: ID
+        AttributeType: S
+      KeySchema:
+      - AttributeName: ID
+        KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: user_id-index
+          KeySchema:
+            - AttributeName: user_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+      
+##########################################################################
+#  Lambda functions                                                      #
+##########################################################################
+
+  publishToIoT:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: Lambda/
+      Handler: publishToIoT.handler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Environment:
+        Variables:
+          Endpoint: !Ref FreshTracksRealtime
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action:
+              - "iot:*"
+            Resource:
+              - "*"
+          Version: '2012-10-17'
+  SaveAuth0EventToS3:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: Lambda/
+      Handler: saveAuth0EventToS3.handler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Environment:
+        Variables:
+          AuthLogBucket: !Ref FreshtracksUserActivitylogs
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref FreshtracksUserActivitylogs
+
+  saveToFreshTracksDatabaseTable:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: Lambda/
+      Handler: dynamodb.handler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Environment:
+        Variables:
+          FreshTracksDatabaseTable: !Ref FreshTracksDatabaseTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FreshTracksDatabaseTable
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            Path: '/activity'
+            Method: post
+            RestApiId: !Ref FreshTracksAPI
+
+  getActivitiesForUser:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: Lambda/
+      Handler: DynamoDbGet.handler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Environment:
+        Variables:
+          FreshTracksDatabaseTable: !Ref FreshTracksDatabaseTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FreshTracksDatabaseTable
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            Path: '/activities'
+            Method: get
+            RestApiId: !Ref FreshTracksAPI
+
+  getActivity:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: Lambda/
+      Handler: getS3FileString.handler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Environment:
+        Variables:
+          FreshTracksDatabaseTable: !Ref FreshTracksDatabaseTable
+          FreshTracksS3Bucket: !Ref FreshTracksS3Bucket
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FreshTracksDatabaseTable
+        - S3CrudPolicy:
+            BucketName: !Ref FreshTracksS3Bucket
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            Path: '/activity'
+            Method: get
+            RestApiId: !Ref FreshTracksAPI
+  parseGPX:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        CodeUri: Lambda/
+        Handler: parseXml.handler
+        Runtime: nodejs12.x
+        MemorySize: 128
+        Environment:
+          Variables:
+            FreshTracksDatabaseTable: !Ref FreshTracksDatabaseTable
+        Policies:
+          - DynamoDBCrudPolicy:
+              TableName: !Ref FreshTracksDatabaseTable  
+  getSignedUrlS3:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: Lambda/
+      Handler: signedS3Url.handler
+      Runtime: nodejs12.x 
+      MemorySize: 128
+      Environment:
+        Variables:
+          FreshTracksS3Bucket: !Ref FreshTracksS3Bucket
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref FreshTracksS3Bucket
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            Path: '/signUrl'
+            Method: post
+            RestApiId: !Ref FreshTracksAPI
+
+##########################################################################
+#   EventBridge Rules                                                    #
+##########################################################################
+
+  EventRuleCase1: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: "New File Uploaded"
+      EventPattern: 
+        source:
+        - aws.s3
+        detail-type:
+        - AWS API Call via CloudTrail
+        detail:
+          eventSource:
+          - s3.amazonaws.com
+          eventName:
+          - PutObject
+          - PutObjectACL
+          requestParameters:
+            bucketName: 
+              - !Ref FreshTracksS3Bucket
+      State: "ENABLED"
+      Targets: 
+        - RoleArn: !GetAtt [ MyStatesExecutionRole, Arn ]
+          Arn: !Ref FreshTracksGPXUploadMachine
+          Id: s3Object
+
+##########################################################################
+#  Lambda Authorizer                                                      #
+##########################################################################
+  MyAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: Lambda/jwt-Rsa-Custom-Authorizer/
+      Handler: jwtRsaCustomAuthorizer.handler
+      Runtime: nodejs12.x 
+      Environment:
+        Variables:
+          AUDIENCE: https://myfreshtracks.com
+          TOKEN_ISSUER: https://bls20.auth0.com/
+          JWKS_URI: https://bls20.auth0.com/.well-known/jwks.json
+      
+##########################################################################
+#   STEP FUNCTION                                                        #
+##########################################################################
+  FreshTracksGPXUploadMachine:
+    Type: "AWS::StepFunctions::StateMachine"
+    Properties:
+      DefinitionString: !Sub |
+              {
+                "Comment": "Process GPX file upload",
+                "StartAt": "parseGPX",
+                "States": {
+                  "parseGPX": {
+                    "Type": "Task",
+                    "ResultPath": "$.Metadata",
+                    "Resource":
+                      "${parseGPX.Arn}",
+                    "Next": "SaveToDb"
+                  },
+                 "SaveToDb": {
+                    "Type": "Task",
+                    "ResultPath": "$.dbRes",
+                    "Resource":"${saveToFreshTracksDatabaseTable.Arn}",
+                    "Next": "publishToIoT"
+                  },
+                  "publishToIoT":{
+                  "Type": "Task",
+                    "Resource":"${publishToIoT.Arn}",
+                    "End":true
+                  }
+                }
+              }
+      RoleArn: !GetAtt [ MyStatesExecutionRole, Arn ]
+##########################################################################
+#   Roles                                                                #
+##########################################################################
+  MyStatesExecutionRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow" 
+              Principal:
+                Service:
+                  - !Sub states.${AWS::Region}.amazonaws.com
+                  - !Sub apigateway.amazonaws.com
+              Action: "sts:AssumeRole"
+        Path: "/"
+        Policies:
+          - PolicyName: StatesExecutionPolicy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "lambda:InvokeFunction"
+                  Resource: "*"
+
+##########################################
+  # Resources for realtime messaging       #
+##########################################
+
+  FreshTracksRealtime:
+      Type: "AWS::IoT::Thing"
+      Properties:
+          ThingName: "fresh-tracks-realtime"
+          AttributePayload: 
+              Attributes: {}  
+
+  UserPool:
+    Type: "AWS::Cognito::UserPool"
+    Properties:
+      UserPoolName: FreshTracksUserPool
+      MfaConfiguration: "OFF"
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+  
+  # Creates a User Pool Client to be used by the identity pool
+  UserPoolClient:
+    Type: "AWS::Cognito::UserPoolClient"
+    Properties:
+      ClientName: FreshTracksUserPoolClient
+      GenerateSecret: false
+      UserPoolId: !Ref UserPool
+  
+  # Creates a federated Identity pool
+  IdentityPool:
+    Type: "AWS::Cognito::IdentityPool"
+    Properties:
+      IdentityPoolName: FreshTracksIdentityPool
+      AllowUnauthenticatedIdentities: true
+      CognitoIdentityProviders: 
+        - ClientId: !Ref UserPoolClient
+          ProviderName: !GetAtt UserPool.ProviderName
+
+  # Create a role for unauthorized access to AWS resources. 
+  CognitoUnAuthorizedRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal: 
+              Federated: "cognito-identity.amazonaws.com"
+            Action: 
+              - "sts:AssumeRoleWithWebIdentity"
+            Condition:
+              StringEquals: 
+                "cognito-identity.amazonaws.com:aud": !Ref IdentityPool
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": unauthenticated
+      Policies:
+        - PolicyName: "CognitoUnauthorizedPolicy"
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - Effect: "Allow"
+                Action:
+                  - "mobileanalytics:PutEvents"
+                  - "cognito-sync:*"
+                  - "iot:*"
+                Resource: "*"
+
+  # Create a role for authorized acces to AWS resources. 
+  CognitoAuthorizedRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal: 
+              Federated: "cognito-identity.amazonaws.com"
+            Action: 
+              - "sts:AssumeRoleWithWebIdentity"
+            Condition:
+              StringEquals: 
+                "cognito-identity.amazonaws.com:aud": !Ref IdentityPool
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": authenticated
+      Policies:
+        - PolicyName: "CognitoAuthorizedPolicy"
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - Effect: "Allow"
+                Action:
+                  - "mobileanalytics:PutEvents"
+                  - "cognito-sync:*"
+                  - "cognito-identity:*"
+                Resource: "*"
+
+  # Assigns the roles to the Identity Pool
+  IdentityPoolRoleMapping:
+    Type: "AWS::Cognito::IdentityPoolRoleAttachment"
+    Properties:
+      IdentityPoolId: !Ref IdentityPool
+      Roles:
+        authenticated: !GetAtt CognitoAuthorizedRole.Arn
+        unauthenticated: !GetAtt CognitoUnAuthorizedRole.Arn
+
+##########################################################################
+#   Outputs                                                              #
+##########################################################################
+Outputs:
+  saveToFreshTracksDatabaseTable:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt saveToFreshTracksDatabaseTable.Arn
+  saveToFreshTracksDatabaseTableIamRole:
+    Description: "Implicit IAM Role created for function"
+    Value: !GetAtt saveToFreshTracksDatabaseTableRole.Arn
+  IotEndpoint:
+    Description: "IoT topic Endpoint"
+    Value: !Ref FreshTracksRealtime
+  getSignedUrlS3:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt getSignedUrlS3.Arn
+  getSignedUrlS3IamRole:
+    Description: "Implicit IAM Role created for function"
+    Value: !GetAtt getSignedUrlS3Role.Arn  
+  FreshTracksDatabaseTable:
+    Description: "DynamoDB Table"
+    Value: !Ref FreshTracksDatabaseTable
+  FreshTracksS3Bucket:
+    Description: "GPX file storage bucket"
+    Value: !Ref FreshTracksS3Bucket
+  FreshtracksUserActivitylogs:
+    Description: "Auth0 event storage bucket"
+    Value: !Ref FreshtracksUserActivitylogs
