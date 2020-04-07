@@ -24,13 +24,12 @@ Metadata:
 #  Parameters & Globals                                                  #
 ##########################################################################
 Parameters:
-  ValidateEmail:
+  Auth0EventBusName:
     Type: String
-    Description: (Required) A validated SES email address for receiving new submissions.
-    MaxLength: 70
-    Default: test@email.com
+    Description: A valid custom Event Bus for Auth0 Events.
+    MaxLength: 150
     MinLength: 4
-    ConstraintDescription: Required. Must be a SES verified email address.
+    AllowedPattern : ".+"
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -225,6 +224,92 @@ Resources:
 #   EventBridge Rules                                                    #
 ##########################################################################
 
+  SuccessfullSignIn: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: "Auth0 User Successfully signed in"
+      EventBusName: 
+         Ref: Auth0EventBusName
+      EventPattern: 
+        account:
+        - !Sub '${AWS::AccountId}'
+        detail:
+          data:
+            type:
+            - s
+      Targets: 
+        - 
+          Arn:
+            Fn::GetAtt:
+              - "SaveAuth0EventToS3" 
+              - "Arn"
+          Id: "SignInSuccessV1"
+
+  SuccessfullSignUp: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: "Auth0 User Successfully signed up"
+      EventBusName: 
+         Ref: Auth0EventBusName
+      EventPattern: 
+        account:
+        - !Sub '${AWS::AccountId}'
+        detail:
+          data:
+            type:
+            - ss
+      Targets: 
+        - 
+          Arn:
+            Fn::GetAtt:
+              - "SaveAuth0EventToS3" 
+              - "Arn"
+          Id: "SignInSuccessV1"
+
+  SuccessfullSignOutSuccess: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: "Auth0 User Successfully signed out"
+      EventBusName: 
+         Ref: Auth0EventBusName
+      EventPattern: 
+        account:
+        - !Sub '${AWS::AccountId}'
+        detail:
+          data:
+            type:
+            - slo
+      Targets: 
+        - 
+          Arn:
+            Fn::GetAtt:
+              - "SaveAuth0EventToS3" 
+              - "Arn"
+          Id: "SignInSuccessV1"
+
+  SignInFail: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: "Auth0 User Signin failed"
+      EventBusName: 
+         Ref: Auth0EventBusName
+      EventPattern: 
+        account:
+        - !Sub '${AWS::AccountId}'
+        detail:
+          data:
+            type:
+            - fp
+            - f
+            - fu
+      Targets: 
+        - 
+          Arn:
+            Fn::GetAtt:
+              - "SaveAuth0EventToS3" 
+              - "Arn"
+          Id: "SignInSuccessV1"
+
   EventRuleCase1: 
     Type: AWS::Events::Rule
     Properties: 
@@ -248,6 +333,21 @@ Resources:
         - RoleArn: !GetAtt [ MyStatesExecutionRole, Arn ]
           Arn: !Ref FreshTracksGPXUploadMachine
           Id: s3Object
+
+########################################################################
+#   Policies                                                           #
+########################################################################
+  PermissionForEventsToInvokeLambda: 
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName: 
+        Ref: "SaveAuth0EventToS3"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: 
+        Fn::GetAtt: 
+          - "SuccessfullSignIn"
+          - "Arn"
 
 ##########################################################################
 #  Lambda Authorizer                                                      #
@@ -457,3 +557,6 @@ Outputs:
   FreshtracksUserActivitylogs:
     Description: "Auth0 event storage bucket"
     Value: !Ref FreshtracksUserActivitylogs
+  SaveAuth0EventToS3:
+    Description: "Save Auth0 Event ToS3  Lambda Function ARN"
+    Value: !GetAtt SaveAuth0EventToS3.Arn
