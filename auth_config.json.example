@@ -1,5 +1,5 @@
 {
-  "domain": "somthing.auth0.com",
-  "clientId": "1234567890",
+  "domain": "<YOUR AUTH0 DOMAIN>",
+  "clientId": "<YOUR AUTH0 CLIENT ID>"
   "audience": ""
 }
