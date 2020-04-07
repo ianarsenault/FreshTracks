@@ -6,7 +6,7 @@ A custom-built serverless application built in Vue.js to demonstrate multiple Sa
 - Zendesk
 - Datadog
 
-![Fresh Tracks](https://raw.githubusercontent.com/bls20AWS/Freshtracks/master/images/FTfrontPage.png "Fresh Tracks")
+![Fresh Tracks](https://raw.githubusercontent.com/bls20AWS/Freshtracks/master/public/images/FTfrontPage.png "Fresh Tracks")
 
 
 
