@@ -26,11 +26,14 @@ npm run serve
 ```
 
 ### Configuration
-#### Auth
+#### Authentication
+
+The project needs to be connected to an Auth0 application in order for the authentication flow to work.
 
 1. Go to [Auth0](https://auth0.com/signup) and click Sign Up.
-
-The project needs to be configured with your Auth0 domain and client ID in order for the authentication flow to work.
+1. Register a [single page applicaiton](https://auth0.com/docs/dashboard/guides/applications/register-app-spa)
+1. Add `http://localhost:3000` to the `Allowed Callback URLs`, `Allowed Logout URLs`, and `Allowed Web Origins` in your applicaiton settings.
+1. You must configure the front end applicaiton with your Auth0 domain and client ID.
 
 To do this, first copy `auth_config.json.example` into a new file in the same folder called `auth_config.json`, and replace the values within with your own Auth0 application credentials:
 
@@ -40,6 +43,10 @@ To do this, first copy `auth_config.json.example` into a new file in the same fo
   "clientId": "<YOUR AUTH0 CLIENT ID>"
 }
 ```
+
+
+## Deploying the backend application
+[See this guide](/backend/FreshTracks/) to deploy the back end resources and services
 
 ## Issue Reporting
 
