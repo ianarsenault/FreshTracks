@@ -1,7 +1,12 @@
 
 # Fresh Tracks
 
-To deploy the the backend of this applicaiton:
-1. in the terminal to to the backend/FreshTracks directory `cd /backend/FreshTracks`
-1. Use the Serverless Application Model (SAM) to deploy the backend Application 
-`aws sam deploy -- g` 
+1. [Create an AWS account](https://portal.aws.amazon.com/gp/aws/developer/registration/index.html) if you do not already have one and login.
+
+1. Clone the repo onto your local development machine using `git clone`.
+
+1. From the command line, change directory into `backend/FreshTracks` then run:
+```
+sam build
+sam deploy --guided
+```
