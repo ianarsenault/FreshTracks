@@ -8,10 +8,21 @@ A custom-built serverless application built in Vue.js to demonstrate multiple Sa
 - Zendesk
 - Datadog
 
-## Project setup
+## Deploying the front-end application
+
+- Clone the repo onto your local development machine:
+```bash
+git clone
+ ```
+- cd into the root directoy and run:
 
 ```bash
 npm install
+```
+
+- Run the application locally:
+```bash
+npm run serve
 ```
 
 ### Configuration
@@ -30,9 +41,7 @@ To do this, first copy `auth_config.json.example` into a new file in the same fo
 
 ### Compiles and hot-reloads for development
 
-```bash
-npm run serve
-```
+
 
 ## Deployment
 
