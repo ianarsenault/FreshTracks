@@ -4,9 +4,9 @@ A custom-built serverless application built in Vue.js to demonstrate multiple Sa
 ![Fresh Tracks](/public/images/FTfrontPage.png "Fresh Tracks")
 
 ## Learn about FreshTracks 3P SaaS integrations:
-- Auth0
-- Zendesk
-- Datadog
+- [Auth0](https://github.com/bls20AWS/Amazon-EventBridge-Integration-with-Auth0)
+- Zendesk (comming soon)
+- Datadog (comming soon)
 
 ## Deploying the front-end application
 
