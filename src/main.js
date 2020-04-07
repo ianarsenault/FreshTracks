@@ -4,6 +4,7 @@ import router from "./router";
 import { Auth0Plugin } from "./auth";
 import HighlightJs from "./directives/highlight";
 
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faLink, faUser, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -12,9 +13,6 @@ import { domain, clientId, audience } from "../auth_config.json";
 require('./assets/css/style.css')
 
 Vue.config.productionTip = false;
-
-
-
 
 Vue.use(Auth0Plugin, {
   domain,
