@@ -4,6 +4,10 @@ node_modules
 backend/node_modules
 backend/Lambda/node_modules
 
+
+# Auth0 config
+auth_config.json
+
 # local env files
 .env.local
 .env.*.local
