@@ -23,6 +23,12 @@ const router = new Router({
       name: "activities",
       component: Activities,
       beforeEnter: authGuard
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: Profile,
+      beforeEnter: authGuard
     }
   ]
 });
