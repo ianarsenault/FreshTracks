@@ -1,8 +1,7 @@
 # Fresh Tracks 
+A custom-built serverless application built in Vue.js to demonstrate multiple SaaS integrations into AWS with EventBridge.
 
 ![Fresh Tracks](/public/images/FTfrontPage.png "Fresh Tracks")
-
-A custom-built serverless application built in Vue.js to demonstrate multiple SaaS integrations into AWS with EventBridge.
 
 - Auth0
 - Zendesk
