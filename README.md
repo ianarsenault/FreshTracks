@@ -3,6 +3,7 @@ A custom-built serverless application built in Vue.js to demonstrate multiple Sa
 
 ![Fresh Tracks](/public/images/FTfrontPage.png "Fresh Tracks")
 
+## Learn about FreshTracks 3P SaaS integrations:
 - Auth0
 - Zendesk
 - Datadog
