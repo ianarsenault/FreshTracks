@@ -15,6 +15,7 @@ npm install
 ```
 
 ### Configuration
+#### Auth
 
 The project needs to be configured with your Auth0 domain and client ID in order for the authentication flow to work.
 
@@ -75,11 +76,7 @@ Auth0 helps you to:
 
 ## Issue Reporting
 
-If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
-
-## Author
-
-[Auth0](https://auth0.com)
+If you have found a bug or if you have a feature request, please report them at this repository issues section.
 
 ## License
 
