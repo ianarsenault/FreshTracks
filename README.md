@@ -1,10 +1,14 @@
-# Scenario #1 - Logging In and Gated Content
+# Fresh Tracks 
 
-This sample demonstrates:
+A custom-built serverless application built in Vue.js to demonstrate multiple SaaS integrations into AWS with EventBridge.
 
-- Logging in to Auth0 using Redirect Mode
-- Accessing profile information that has been provided in the ID token
-- Gated content. The `/profile` route is not accessible without having first logged in
+- Auth0
+- Zendesk
+- Datadog
+
+![Fresh Tracks](https://raw.githubusercontent.com/bls20AWS/Freshtracks/master/images/FTfrontPage.png "Fresh Tracks")
+
+
 
 ## Project setup
 
