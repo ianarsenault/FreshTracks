@@ -7,12 +7,19 @@ import router from "./router";
 import { Auth0Plugin } from "./auth";
 import HighlightJs from "./directives/highlight";
 
-
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faLink, faUser, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { domain, clientId, audience } from "../auth_config.json";
 
+var domain 
+var clientId 
+var audience 
+
+if(process.env.VUE_APP_Auth0_Domain){
+     domain = process.env.VUE_APP_Auth0_Domain
+     clientId = process.env.VUE_APP_Auth0_ClientId
+     audience = process.env.VUE_APP_Auth0_Audience
+}
 require('./assets/css/style.css')
 
 Vue.config.productionTip = false;
