@@ -24,12 +24,18 @@ SPDX-License-Identifier: MIT-0 */
 import NavBar from "./components/NavBar";
 import Error from "./components/Error";
 
+
+
+
+
+
 export default {
   components: {
     NavBar,
     Error
   },
   mounted(){
+
 
   }
 };

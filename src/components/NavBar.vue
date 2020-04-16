@@ -104,7 +104,65 @@ export default {
     logout() {
       this.$auth.logout();
       this.$router.push({ path: "/" });
-    }
+    },
+    zenDeskWidget(){
+        var self = this
+         zE('webWidget:on', 'open', function() {
+
+           zE('webWidget', 'updateSettings', {
+              webWidget: {
+                contactForm: {
+                  selectTicketForm: {
+                    '*': 'Please choose:'
+                  },
+                      ticketForms: [
+                        { 
+                          id: 360000145138,
+                          fields: [
+                          ]      
+                        }
+                      ]
+                },
+                attachments: true,
+                helpCenter: {
+                  messageButton: {
+                    '*': 'Ask a question'
+                  },
+                    originalArticleButton: false
+                }
+              }
+            });
+
+
+
+
+             if(self.$auth.isAuthenticated){
+                //zE('webWidget', 'close');
+                //self.$auth.loginWithRedirect();
+
+                zE('webWidget', 'updateSettings', {
+                  webWidget: {
+                    contactForm: {
+                          ticketForms: [
+                            { 
+                              id: 360000145138,
+                              fields: [
+                                { id: "email", prefill: { '*': self.$auth.user.email } },
+                              ]      
+                            }
+                          ]
+                    },
+                  }
+                });
+
+
+             }
+            
+         }); 
+      }
+  },
+  mounted(){
+    this.zenDeskWidget()
   }
 };
 </script>
@@ -114,4 +172,5 @@ export default {
   min-height: 125px;
   justify-content: space-between;
 }
+
 </style>
