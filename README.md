@@ -35,17 +35,40 @@ The project needs to be connected to an Auth0 application in order for the authe
 1. Add `http://localhost:3000` to the `Allowed Callback URLs`, `Allowed Logout URLs`, and `Allowed Web Origins` in your applicaiton settings.
 1. You must configure the front end applicaiton with your Auth0 domain and client ID.
 
-To do this, alter the /src/auth/auth_config.json file with your Auth0 credentials:
+You can do this in 1 of 2 ways:
+#### Option 1 (prefered) - use environment variables:
+create a .env file in the root directory and provide the following values:
+
+```bash
+VUE_APP_Auth0_Domain = <YOUR AUTH0 DOMAIN>
+VUE_APP_Auth0_ClientId = <YOUR AUTH0 CLIENT ID>
+VUE_APP_Auth0_Audience = <API_IDENTIFIER>
+```
+
+#### Option 2 - use a json config file:
+
+To do this alter the /src/auth/auth_config.json file with your Auth0 credentials:
 ```javascript
 {
+
   "domain": "<YOUR AUTH0 DOMAIN>",
   "clientId": "<YOUR AUTH0 CLIENT ID>",
   "audience": "<API_IDENTIFIER>"
 }
 ```
+Then in `/src/main.js`:
+1.  uncomment `import { domain,clientId,audience } from "./auth/auth_config.json";`
+1.  comment out:
+```javascript
+var domain = process.env.VUE_APP_Auth0_Domain
+var clientId = process.env.VUE_APP_Auth0_ClientId
+var audience = process.env.VUE_APP_Auth0_Audience
+```
+
 #### HelpWidget
 FreshTracks uses Zendesks [Web Widget](https://www.zendesk.com/embeddables/) to provide a curated self service knowldge repository.
 In order to configure this for your own Zendesk account you'll need to replace:
+
 1. index.html
 1. navigation.js - form ID 
 
