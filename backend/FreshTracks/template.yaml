@@ -32,6 +32,22 @@ Parameters:
     Default: "aws.partner/auth0.com/###########/auth0.logs"
     AllowedPattern : ".+"
 
+  Auth0Domain:
+    Type: String
+    Description: Your Auth0 App account domain.
+    MaxLength: 150
+    MinLength: 4
+    Default: "https://YourAuth0DOmain"
+    AllowedPattern : ".+"
+
+  Auth0Audience:
+    Type: String
+    Description: your Auth0 API audience identifier.
+    MaxLength: 150
+    MinLength: 4
+    Default: "https://YourAPIIdentifier" // https://myfreshtracks.com
+    AllowedPattern : ".+"
+
   ZendeskEventBusName:
     Type: String
     Description: A valid custom Event Bus for Auth0 Events.
@@ -458,9 +474,9 @@ Resources:
       Runtime: nodejs12.x 
       Environment:
         Variables:
-          AUDIENCE: https://myfreshtracks.com
-          TOKEN_ISSUER: https://bls20.auth0.com/
-          JWKS_URI: https://bls20.auth0.com/.well-known/jwks.json
+          AUDIENCE: !Ref Auth0Audience
+          TOKEN_ISSUER: !Ref Auth0Domain
+          JWKS_URI:  !Sub "${Auth0Domain} well-known/jwks.json"
       
 ##########################################################################
 #   STEP FUNCTION                                                        #
