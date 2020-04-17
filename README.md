@@ -66,11 +66,20 @@ var audience = process.env.VUE_APP_Auth0_Audience
 ```
 
 ### HelpWidget - Zendesk Integration
-FreshTracks uses Zendesks [Web Widget](https://www.zendesk.com/embeddables/) to provide a curated self service knowldge repository.
-In order to configure this for your own Zendesk account you'll need to replace:
+FreshTracks uses Zendesk's [Web Widget](https://www.zendesk.com/embeddables/) to provide a curated self service knowldge repository.
 
-1. index.html
-1. navigation.js - form ID 
+In order to configure this for your own Zendesk account you'll need to replace the Zendesk widget script located in `public/index.html` with your own Zendesk web widget script. to locate this:
+
+In your Zendesk Dashboard:
+  1. Click the Admin icon in the sidebar, then select Channels > Widget.
+  1. Click the Setup tab, if it is not already selected.
+  1. Under the code box, click Copy to clipboard.
+  1. Paste this into `public/index.html`, replacing the existing script.
+
+Some further customizations have been made in `/src/components/NavBar.vue`.
+These include the insertion of a custom form, delared by the form ID.  You can use your own custom forms here:
+
+[Creating custom Zendesk Forms](https://support.zendesk.com/hc/en-us/articles/203661616-Creating-multiple-ticket-forms-to-support-different-request-types-Professional-add-on-and-Enterprise-)
 
 ## Deploying the backend application
 [See this guide](/backend/FreshTracks/) to deploy the back end resources and services

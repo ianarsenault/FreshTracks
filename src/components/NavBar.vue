@@ -109,15 +109,6 @@ export default {
         var self = this
 
          zE('webWidget:on', 'open', function() {
-
-           zE('webWidget', 'prefill', {
-              360006588397: {
-                value: 'ben@hotmail.com',
-                readOnly: true // optional
-              },
-           });
-
-
            zE('webWidget', 'updateSettings', {
               webWidget: {
                 contactForm: {
@@ -127,9 +118,6 @@ export default {
                       ticketForms: [
                         { 
                           id: 360000145138,  // a zendesk custom formID
-                          fields:[
-                            { id: 360006588397, prefill: { '*': 'Not signed in',readOnly: true } }
-                          ]
                         }
                       ]
                 },
@@ -151,8 +139,7 @@ export default {
                             { 
                               id: 360000145138, // a zendesk custom formID
                               fields: [
-                                { id: "email", prefill: { '*': self.$auth.user.email, readOnly: true } },
-                                { id: 360006588397, prefill: { '*': self.$auth.user.sub , readOnly: true }}
+                                { id: "email", prefill: { '*': self.$auth.user.email} },
                               ]      
                             }
                           ]
