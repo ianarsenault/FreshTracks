@@ -35,12 +35,13 @@ The project needs to be connected to an Auth0 application in order for the authe
 1. Add `http://localhost:3000` to the `Allowed Callback URLs`, `Allowed Logout URLs`, and `Allowed Web Origins` in your applicaiton settings.
 1. You must configure the front end applicaiton with your Auth0 domain and client ID.
 
-To do this, create a .env file in the route directory and enter the following environment variables, (replacing the template values with your own)
-
-```bash
-VUE_APP_Auth0_Domain = <AUTH0DOMAIN>
-VUE_APP_Auth0_ClientId = <AUTHOAPPCLIENTID>
-VUE_APP_Auth0_Audience = <AUTH0AUDIENCE>
+To do this, alter the /src/auth/auth_config.json file with your Auth0 credentials:
+```javascript
+{
+  "domain": "<YOUR AUTH0 DOMAIN>",
+  "clientId": "<YOUR AUTH0 CLIENT ID>",
+  "audience": "<API_IDENTIFIER>"
+}
 ```
 #### HelpWidget
 FreshTracks uses Zendesks [Web Widget](https://www.zendesk.com/embeddables/) to provide a curated self service knowldge repository.
