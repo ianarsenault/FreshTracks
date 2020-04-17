@@ -25,8 +25,8 @@ npm install
 npm run serve
 ```
 
-### Configuration
-#### Authentication
+## Configuration
+### Authentication - Auth0 Integration
 
 The project needs to be connected to an Auth0 application in order for the authentication flow to work.
 
@@ -65,7 +65,7 @@ var clientId = process.env.VUE_APP_Auth0_ClientId
 var audience = process.env.VUE_APP_Auth0_Audience
 ```
 
-#### HelpWidget
+### HelpWidget - Zendesk Integration
 FreshTracks uses Zendesks [Web Widget](https://www.zendesk.com/embeddables/) to provide a curated self service knowldge repository.
 In order to configure this for your own Zendesk account you'll need to replace:
 
@@ -74,9 +74,6 @@ In order to configure this for your own Zendesk account you'll need to replace:
 
 ## Deploying the backend application
 [See this guide](/backend/FreshTracks/) to deploy the back end resources and services
-
-
-
 
 ## Issue Reporting
 
