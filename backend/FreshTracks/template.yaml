@@ -429,7 +429,7 @@ Resources:
               - guide
       Targets: 
         - RoleArn: !GetAtt [ MyStatesExecutionRole, Arn ]
-          Arn: !Ref FreshTracksZenDeskQueryMachine
+          Arn: !Ref FreshTracksZenDeskStateMachine
           Id: NewQuery
 
 ########################################################################
@@ -497,9 +497,10 @@ Resources:
 
 
 
-  FreshTracksZenDeskQueryMachine:
+  FreshTracksZenDeskStateMachine:
     Type: "AWS::StepFunctions::StateMachine"
     Properties:
+      StateMachineType: EXPRESS
       DefinitionString: !Sub |
                {
                     "Comment": "Create a new article from a zendeskTicket",

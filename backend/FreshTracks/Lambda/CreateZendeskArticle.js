@@ -8,9 +8,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 const axios = require('axios')
 exports.handler = async (event) => {
-
-
-
     let permission_group = 807657// place this into process.env.permission_group
     let section = 360002159957 // place this into process.env.permission_group
     ticket={"title":event.FullTicket.subject,"body":event.detail.ticket_event.comment.body,"permission_group":permission_group,"section":section}

@@ -42,7 +42,11 @@ VUE_APP_Auth0_Domain = <AUTH0DOMAIN>
 VUE_APP_Auth0_ClientId = <AUTHOAPPCLIENTID>
 VUE_APP_Auth0_Audience = <AUTH0AUDIENCE>
 ```
-
+#### HelpWidget
+FreshTracks uses Zendesks [Web Widget](https://www.zendesk.com/embeddables/) to provide a curated self service knowldge repository.
+In order to configure this for your own Zendesk account you'll need to replace:
+1. index.html
+1. navigation.js - form ID 
 
 ## Deploying the backend application
 [See this guide](/backend/FreshTracks/) to deploy the back end resources and services
