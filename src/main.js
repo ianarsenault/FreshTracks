@@ -13,16 +13,17 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 var domain 
 var clientId 
-//var audience 
+var audience 
 
 
 if(process.env.VUE_APP_Auth0_Domain){
      domain = process.env.VUE_APP_Auth0_Domain
      clientId = process.env.VUE_APP_Auth0_ClientId
-     //audience = process.env.VUE_APP_Auth0_Audience
+     audience = process.env.VUE_APP_Auth0_Audience
 }
-require('./assets/css/style.css')
 
+
+require('./assets/css/style.css')
 Vue.config.productionTip = false;
 
 Vue.use(Auth0Plugin, {
