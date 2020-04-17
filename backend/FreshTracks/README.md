@@ -8,7 +8,7 @@
 1. Clone the repo onto your local development machine using `git clone`.
 
 
-1. in teh template.yaml replace the following parameters with your own credentials:
+1. in the template.yaml replace the following parameters with your own credentials:
 
 ```yaml
 Auth0EventBusName:
