@@ -84,6 +84,8 @@ These include the insertion of a custom form, delared by the form ID.  You can u
 ## Deploying the backend application
 [See this guide](/backend/FreshTracks/) to deploy the back end resources and services
 
+![Fresh Tracks - Core architecture](/public/images/architecture1.png "Fresh Tracks")
+
 ## Issue Reporting
 
 If you have found a bug or if you have a feature request, please report them at this repository issues section.
