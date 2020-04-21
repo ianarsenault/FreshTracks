@@ -87,7 +87,7 @@ export default {
 
             return axios({
                 method: "POST",
-                headers:{ Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlFrTkNNVEZCUlRZMlJFVkNOemd6UmpNd01VSXlPVGN5T1RNd05FUXdOa1ZGUlRSRU9Ua3pOdyJ9.eyJpc3MiOiJodHRwczovL2JsczIwLmF1dGgwLmNvbS8iLCJzdWIiOiJhbWF6b258YW16bjEuYWNjb3VudC5BSEZHRkhNRFpHRjRHT1Q2SFdSU0RWTzZUS0tBIiwiYXVkIjpbImh0dHBzOi8vbXlmcmVzaHRyYWNrcy5jb20iLCJodHRwczovL2JsczIwLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODU1OTI1MTUsImV4cCI6MTU4NTY3ODkxNSwiYXpwIjoiUVAxOW9nbElNcVJEbE5veTJrT3lrY2x3MmxiY3hQaDgiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.3AegyTW1LKKFTn1Nk9h6VOIdfvUfo8Yv5IzTdu3rn1DaROc2qj2f5NQ981DInGZUx9PKVbqmHQGucGXLagQiaF_ez7RPyyDHBPLRYOcOQpxUrqaeG9xi020P9XvqMMnVFNA2YhjiclqFqaDDY-III2C7Rx6W_lgZ7Kw8cEfobQHbBm-YBYDMDCQYtkS2ES5LEmw9u9JeQ5J7IaHtlftRD50ne66tR8zmbPxLwP8uTAi0qFDJX7-2zA_nRIsCx4m7LtBYYGKloUW_w3rShtRjEin75EL2QE4SHg_T7FTjxccu667MV88IRE0l-YSytHFth1OUKKd56STxAQZkfryMww` } ,  
+                headers:{ Authorization: `Bearer ${token}` } ,  
                 url: process.env.VUE_APP_APIGW_URL+'/signUrl',
                 data:{'filePath': file.name,'contentType':file.contentType,'user_id':this.$auth.user.sub}
               }).then((res) => {
