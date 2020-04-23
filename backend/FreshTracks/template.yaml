@@ -37,7 +37,7 @@ Parameters:
     Description: Your Auth0 App account domain.
     MaxLength: 150
     MinLength: 4
-    Default: "https://YourAuth0DOmain"
+    Default: "YourAuth0DOmain"
     AllowedPattern : ".+"
 
   Auth0Audience:
