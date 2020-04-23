@@ -26,10 +26,10 @@ Metadata:
 Parameters:
   Auth0EventBusName:
     Type: String
-    Description: A valid custom Event Bus for Auth0 Events.
+    Description: A valid custom Event Bus for Auth0 Events e.g. aws.partner/auth0.com/###########/auth0.logs.
     MaxLength: 150
     MinLength: 4
-    Default: "aws.partner/auth0.com/###########/auth0.logs"
+    Default: "default"
     AllowedPattern : ".+"
 
   Auth0Domain:
@@ -42,18 +42,18 @@ Parameters:
 
   Auth0Audience:
     Type: String
-    Description: your Auth0 API audience identifier.
+    Description: your Auth0 API audience identifier e.g.  https://myfreshtracks.com.
     MaxLength: 150
     MinLength: 4
-    Default: "https://YourAPIIdentifier" // https://myfreshtracks.com
+    Default: "https://YourAPIIdentifier" 
     AllowedPattern : ".+"
 
   ZendeskEventBusName:
     Type: String
-    Description: A valid custom Event Bus for Auth0 Events.
+    Description: A valid custom Event Bus for Zendesk Events e.g. aws.partner/zendesk.com/######/default.
     MaxLength: 150
     MinLength: 4
-    Default: "aws.partner/zendesk.com/######/default"
+    Default: "default"
     AllowedPattern : ".+"
 
   ZenDeskDomain:
