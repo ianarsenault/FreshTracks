@@ -2,10 +2,10 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "FreshTracks"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-12o3g3x0szjnk"
-s3_prefix = "FreshTracks"
+stack_name = "FreshTracksP"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-wvn79ntjblnl"
+s3_prefix = "FreshTracksP"
 region = "eu-west-1"
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "ValidateEmail=\"test@email.com\""
+parameter_overrides = "Auth0EventBusName=\"default\" Auth0Domain=\"YourAuth0DOmain\" Auth0Audience=\"https://YourAPIIdentifier\" ZendeskEventBusName=\"default\" ZenDeskDomain=\"example-domain.zendesk\" ZenDeskPassword=\"abcfedghijllmnop12345678\" ZenDeskUsername=\"email@address.com\""
 

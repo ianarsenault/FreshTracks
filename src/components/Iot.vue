@@ -13,9 +13,11 @@ export default {
 
     // LOOK! YOU WILL NEED TO UPDATE THESE VALUES!
     const currentlySubscribedTopic = 'UpdateTable-'+this.$auth.user.sub
+    console.log('subscribedto'+'-'+currentlySubscribedTopic)
+
     const AWSConfiguration = {
-      poolId: 'eu-west-1:22389d5f-1866-4ef5-9097-d4874c606440', // 'YourCognitoIdentityPoolId'
-      host: 'a1e6dkr395kalw-ats.iot.eu-west-1.amazonaws.com', // 'YourAwsIoTEndpoint', e.g. 'prefix.iot.us-east-1.amazonaws.com'
+      poolId: process.env.VUE_APP_IdentityPoolId, // 'YourCognitoIdentityPoolId'
+      host: process.env.VUE_APP_AwsIoTEndpoint, // 'YourAwsIoTEndpoint', e.g. 'prefix.iot.us-east-1.amazonaws.com'
       region: 'eu-west-1' // 'YourAwsRegion', e.g. 'us-east-1'
     }
 
