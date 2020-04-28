@@ -11,11 +11,13 @@ SPDX-License-Identifier: MIT-0 */
       </div>
     </div>
     <footer class="bg-light text-center p-3">
+        <a href="https://github.com/bls20AWS/freshTracks">
       <div class="logo"></div>
       <p>
         Source code available on Github
-        <a href="https://github.com/bls20AWS/freshTracks"></a>
+      
       </p>
+      </a>
     </footer>
   </div>
 </template>

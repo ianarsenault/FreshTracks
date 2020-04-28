@@ -4,11 +4,9 @@
     <img class="mb-1 icon" style="width:100%;" src="/icons/ski/031-slalom.png" alt="Fresh tracks"/>
     
     <p class="lead">
-      This is a sample application that demonstrates how to connect to multiple 3P SaaS providers,
-      Eliminate the data sprawl that occurs when using multiple SaaS integrations
-      and Automate workloads between them.
-
+      Fresh Tracks is a sample serverless web application that lets you visualize your ski and snowboarding data to keep a record of all your mountain activities.
     </p>
+
   </div>
 </template>
 <script>

@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0 */
     <hero />
    
     <hr />
-    <!-- <home-content /> -->
+    <home-content /> 
   </div>
 </template>
 

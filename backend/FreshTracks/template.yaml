@@ -101,7 +101,6 @@ Globals:
       AllowHeaders: "'Content-Type'"
       AllowOrigin: "'*'"   
 Resources:
-
 ##########################################################################
 #  Amplify Console Set up                                                #
 ##########################################################################  
@@ -131,19 +130,19 @@ Resources:
       Name: FreshTracksApp
  
 ##########################################################################
-#  API                                                        #
+#  API                                                                   #
 ##########################################################################  
   FreshTracksAPI:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
       Auth:
-        DefaultAuthorizer: MyLambdaTokenAuthorizer
+        #DefaultAuthorizer: MyLambdaTokenAuthorizer
         Authorizers:
           MyLambdaTokenAuthorizer:
             FunctionArn: !GetAtt MyAuthFunction.Arn
 ##########################################################################
-#  S3 Buckets                                                             #
+#  S3 Buckets                                                            #
 ##########################################################################
   s3BucketForTrailData:
     Type: "AWS::S3::Bucket"
@@ -338,6 +337,8 @@ Resources:
         HttpPost:
           Type: Api
           Properties:
+            Auth: 
+              Authorizer: MyLambdaTokenAuthorizer
             Path: '/activity'
             Method: post
             RestApiId: !Ref FreshTracksAPI
@@ -359,6 +360,8 @@ Resources:
         HttpPost:
           Type: Api
           Properties:
+            Auth: 
+              Authorizer: MyLambdaTokenAuthorizer
             Path: '/activities'
             Method: get
             RestApiId: !Ref FreshTracksAPI
@@ -383,6 +386,8 @@ Resources:
         HttpPost:
           Type: Api
           Properties:
+            Auth: 
+              Authorizer: MyLambdaTokenAuthorizer
             Path: '/activity'
             Method: get
             RestApiId: !Ref FreshTracksAPI
@@ -418,6 +423,8 @@ Resources:
         HttpPost:
           Type: Api
           Properties:
+            Auth: 
+              Authorizer: MyLambdaTokenAuthorizer
             Path: '/signUrl'
             Method: post
             RestApiId: !Ref FreshTracksAPI
